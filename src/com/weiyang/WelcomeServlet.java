@@ -23,33 +23,33 @@ public class WelcomeServlet extends HttpServlet {
 			String username = (String) hs.getAttribute("username");
 			res.setContentType("text/html;charset=utf-8");
 			PrintWriter pw = res.getWriter();
-			// ¤À­¶ªº¥\¯à
-			// ¨C¤@­¶Åã¥Ü´X±ø¬ö¿ı
-			int pageSize = 3;
+			// åˆ†é çš„åŠŸèƒ½
+			// æ¯ä¸€é é¡¯ç¤ºå¹¾æ¢ç´€éŒ„
+			int pageSize = 5;
 			// (pageSize - 1) * pageNow + "," + pageSize);
 			// 2-1*3
-			// ·í«e­¶­±
+			// ç•¶å‰é é¢
 			int pageNow = 1;
 
-			// ¦@¦³´X±ø¬ö¿ı(¬dªí±o¨ìªº)
+			// å…±æœ‰å¹¾æ¢ç´€éŒ„(æŸ¥è¡¨å¾—åˆ°çš„)
 			int rowCount = 0;
 
-			// ¦@¦³´X­¶(­pºâ±o¨ìªº)
+			// å…±æœ‰å¹¾é (è¨ˆç®—å¾—åˆ°çš„)
 			int pageCount = 0;
 
-			// ­º¥ı±o¨ìrowCount
+			// é¦–å…ˆå¾—åˆ°rowCount
 
-			// °ÊºAªº±µ¦¬pageNow
+			// å‹•æ…‹çš„æ¥æ”¶pageNow
 			String sPageNow = req.getParameter("pageNowOk");
 
 			if (sPageNow != null) {
 				pageNow = Integer.parseInt(sPageNow);
 			}
 
-			// «Ø¥ß¸ê®Æ®w
+			// å»ºç«‹è³‡æ–™åº«
 			Class.forName("com.mysql.jdbc.Driver");
 
-			// ±o¨ì³s½u
+			// å¾—åˆ°é€£ç·š
 
 			ct = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "5566");
 
@@ -61,51 +61,59 @@ public class WelcomeServlet extends HttpServlet {
 				rowCount = rs.getInt(1);
 			}
 
-			// ­pºâpageCount
+			// è¨ˆç®—pageCount
 			if (rowCount % pageSize == 0) {
 				pageCount = rowCount / pageSize;
 			} else {
 				pageCount = rowCount / pageSize + 1;
 			}
+
 			if (username != null) {
 
 				pw.println("<body><center>");
 				pw.println("<img src=imgs/1.jpg width=250 height=250><br>");
-				pw.println("welcome,hello" + username + "Åwªï¦^¨Ó");
+				pw.println("welcome,hello" + username + "æ­¡è¿å›ä¾†");
 			} else {
 
-				// ¦pªGsession¨S¦³¸ê°T ¦A¬İ¬İcookie¦³¨S¦³°T®§
+				// å¦‚æœsessionæ²’æœ‰è³‡è¨Š å†çœ‹çœ‹cookieæœ‰æ²’æœ‰è¨Šæ¯
 
-				// ±q«È¤áºİ±o¨ì©Ò¦³cookie°T®§
+				// å¾å®¢æˆ¶ç«¯å¾—åˆ°æ‰€æœ‰cookieè¨Šæ¯
 				Cookie[] allCookies = req.getCookies();
 
 				int i = 0;
-
-				// ¦pªGcookie¤£¬°ªÅ
+				System.out.println("æ‡‰è©²ç‚ºnullå§" + "-----" + allCookies);
+				// å¦‚æœcookieä¸ç‚ºç©º
 				if (allCookies != null) {
-
-					// ±q°}¦C¤¤¨ú¥X
+					System.out.println("æœ‰è¿‘ä¾†a87????");
+					// å¾é™£åˆ—ä¸­å–å‡º
 					for (i = 0; i < allCookies.length; i++) {
-						// ¨Ì¦¸¨ú¥X
+						// ä¾æ¬¡å–å‡º
 						Cookie temp = allCookies[i];
+						System.out.println("temp.getName()==" + temp.getName());
+						System.out.println("temp.getValue()==" + temp.getValue());
 						if (temp.getName().equals("myname")) {
-							// ±o¨ìcookieªº­È
+
+							// å¾—åˆ°cookieçš„å€¼
 							myname = temp.getValue();
 						} else if (temp.getName().equals("mypassword")) {
+
 							mypassword = temp.getValue();
 						}
+
 					}
 
+					/*--------------*/
 					if (!myname.equals("") && !mypassword.equals("")) {
-						// ¨ìlogincl¥hÅçÃÒ
-						
+						// åˆ°loginclå»é©—è­‰
+
 						res.sendRedirect("LoginCl?username=" + myname + "&password=" + mypassword);
 						return;
 
 					}
 
 				}
-				//ªğ¦^µn¤J¤¶­±
+				System.out.println("é€™é‚Šå½±å—");
+				// è¿”å›ç™»å…¥ä»‹é¢
 				res.sendRedirect("LoginServlet");
 				return;
 			}
@@ -115,7 +123,7 @@ public class WelcomeServlet extends HttpServlet {
 			rs = ps.executeQuery();
 
 			pw.println("<table border=1>");
-			pw.println("<tr><th>ID</th><th>±b¸¹</th><th>±K½X</th><th>EMAIL</th><th>µ¥¯Å</th></tr>");
+			pw.println("<tr><th>ID</th><th>å¸³è™Ÿ</th><th>å¯†ç¢¼</th><th>EMAIL</th><th>ç­‰ç´š</th></tr>");
 			while (rs.next()) {
 
 				pw.println("<tr>");
@@ -127,19 +135,27 @@ public class WelcomeServlet extends HttpServlet {
 				pw.println("</tr>");
 			}
 
+			pw.println("<br>");
+
 			pw.println("</body></center>");
-			// ¤W¤@­¶
+
+			pw.println("</table>");
+
+			// ä¸Šä¸€é 
 			if (pageNow != 1) {
-				pw.println("<a href=?pageNowOk=" + (pageNow - 1) + ">" + "&nbsp;" + "¤W¤@­¶ " + "&nbsp;" + "</a>");
+				pw.println("<a href=?pageNowOk=" + (pageNow - 1) + ">" + "&nbsp;" + "ä¸Šä¸€é  " + "&nbsp;" + "</a>");
 			}
-			// Åã¥Ü¶W³sµ²
+			// é¡¯ç¤ºè¶…é€£çµ
 			for (int i = pageNow; i <= pageNow + 4; i++) {
 				pw.println("<a href=?pageNowOk=" + i + ">" + "&nbsp;" + i + "&nbsp;" + "</a>");
 			}
-			// ¤U¤@­¶
+			// ä¸‹ä¸€é 
 			if (pageNow != pageCount) {
-				pw.println("<a href=?pageNowOk=" + (pageNow + 1) + ">" + "&nbsp;" + " ¤U¤@­¶" + "&nbsp;" + "</a>");
+				pw.println("<a href=?pageNowOk=" + (pageNow + 1) + ">" + "&nbsp;" + " ä¸‹ä¸€é " + "&nbsp;" + "</a>");
 			}
+
+			// è¿”å›ç™»å…¥ç•«é¢
+			pw.println("<a href=/JavaWeb/LoginServlet?check=true>" + "ç™»å‡º" + "</a>");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

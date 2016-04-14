@@ -1,4 +1,4 @@
-//³o¬O§Úªº²Ä¤@­Óservlet ¨Ï¥Î®É­­servlet¤¶­±ªº¤è¦¡¨Ó¶}µo
+//ï¿½oï¿½Oï¿½Úªï¿½ï¿½Ä¤@ï¿½ï¿½servlet ï¿½Ï¥Î®É­ï¿½servletï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¦¡ï¿½Ó¶}ï¿½o
 
 package com.weiyang;
 
@@ -28,7 +28,7 @@ public class CookieTest1 extends HttpServlet{
 			
 			res.addCookie(myCookie);
 			
-			pw.println("¤w¸g«Ø¥ßcookie");
+			pw.println("å·²ç¶“å»ºç«‹COOKIE");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

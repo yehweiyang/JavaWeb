@@ -1,6 +1,10 @@
 package com.weiyang;
 
 import javax.servlet.http.*;
+
+import com.DB.ConnDB;
+import com.DB.UserBeanCl;
+
 import java.io.*;
 import java.sql.*;
 
@@ -17,57 +21,44 @@ public class LoginCl extends HttpServlet {
 		ResultSet rs = null;
 		try {
 
-			// ±µ¦¬¥Î¤á©ú©M±K½X
+			// æ¥æ”¶ç”¨æˆ¶æ˜å’Œå¯†ç¢¼
 			String username = req.getParameter("username");
 			String password = req.getParameter("password");
 
-			System.out.println("¬İ·|¥X²{´X¦¸");
-			// «Ø¥ß¸ê®Æ®w
-			Class.forName("com.mysql.jdbc.Driver");
+			ConnDB cb = new ConnDB();
+			ct = cb.getConn();
 
-			// ±o¨ì³s½u
+			UserBeanCl ubc = new UserBeanCl();
 
-			ct = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "5566");
+			if (ubc.checkUser(username, password)) {
 
-			// «Ø¥ßStatement
-			sm = ct.createStatement();
+				String keep = req.getParameter("keep");
+				if (keep != null) {
 
-			// rs = sm.executeQuery(
-			// "select * from userData where username=' " + username + " ' and
-			// password='" + password + "'"+"LIMIT 1");
-			rs = sm.executeQuery("select  * from userData  where username='" + username + "' LIMIT 1");
+					// å°‡å¸³è™Ÿå’Œå¯†ç¢¼ä¿å­˜åœ¨å®¢æˆ¶ç«¯
+					Cookie myname = new Cookie("myname", username);
+					Cookie mypassword = new Cookie("mypassword", password);
 
-			if (rs.next()) {
-				String dbPassword = rs.getString(3);
-				if (dbPassword.equals(password)) {
-					// ¦Xªk
-					String keep = req.getParameter("keep");
-					if (keep != null) {
+					// è¨­ç½®æ™‚é–“
+					myname.setMaxAge(60 * 60 * 24 * 14);
+					mypassword.setMaxAge(60 * 60 * 24 * 14);
 
-						// ±N±b¸¹©M±K½X«O¦s¦b«È¤áºİ
-						Cookie myname = new Cookie("myname", username);
-						Cookie mypassword = new Cookie("mypassword", password);
-
-						// ³]¸m®É¶¡
-						myname.setMaxAge(60 * 60 * 24 * 14);
-						mypassword.setMaxAge(60 * 60 * 24 * 14);
-
-						// «O¦s¨ì«È¤áºİ
-						res.addCookie(myname);
-						res.addCookie(mypassword);
-					}
-					HttpSession hs = req.getSession(true);
-					hs.setAttribute("username", username);
-
-					// ¼g¹D§A­n¨ìªºServletªº¨º­Óurl
-					res.sendRedirect("WelcomeServlet");
+					// ä¿å­˜åˆ°å®¢æˆ¶ç«¯
+					res.addCookie(myname);
+					res.addCookie(mypassword);
 				}
+				HttpSession hs = req.getSession(true);
+				hs.setAttribute("username", username);
+
+				// å¯«é“ä½ è¦åˆ°çš„Servletçš„é‚£å€‹url
+				res.sendRedirect("WelcomeServlet");
+
 			} else {
 
-				// ¤£¦Xªk
-				System.out.println("¦³¤º°­ °±¤î¥æ©ö");
+				// ä¸åˆæ³•
+				System.out.println("æœ‰å…§é¬¼ åœæ­¢äº¤æ˜“");
 
-				// ¼g¹D§A­n¨ìªºServletªº¨º­Óurl
+				// å¯«é“ä½ è¦åˆ°çš„Servletçš„é‚£å€‹url
 				res.sendRedirect("LoginServlet");
 			}
 
