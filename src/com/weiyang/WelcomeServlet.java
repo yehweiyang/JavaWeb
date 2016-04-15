@@ -16,9 +16,7 @@ import java.util.ArrayList;
 public class WelcomeServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) {
-		BufferedReader br = null;
-		BufferedWriter bw = null;
-		FileWriter fw = null;
+
 		Connection ct = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -128,11 +126,9 @@ public class WelcomeServlet extends HttpServlet {
 			if (pageNow != ubs.fPageCount()) {
 				pw.println("<a href=?pageNowOk=" + (pageNow + 1) + ">" + "&nbsp;" + " 下一頁" + "&nbsp;" + "</a>");
 			}
+
 			// 返回登入畫面
 			pw.println("<a href=/JavaWeb/LoginServlet?check=true>" + "登出" + "</a>");
-			pw.println("被訪問了" + this.getServletContext().getAttribute("times") + "次<br>");
-			pw.println("你的IP位置是  :" + req.getRemoteAddr()+"<br>");
-			pw.println("你的瀏覽器主機是  :" + req.getRemoteHost()+"<br>");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
