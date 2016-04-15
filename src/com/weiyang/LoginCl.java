@@ -10,6 +10,54 @@ import java.sql.*;
 
 public class LoginCl extends HttpServlet {
 
+	BufferedReader br = null;
+	BufferedWriter bw = null;
+	FileWriter fw = null;
+
+	// 覆寫init函數
+	@Override
+	public void init() {
+
+		try {
+
+			// 增加網頁訪問次數
+			// 建立一FileReader
+			FileReader f = new FileReader("C:\\Users\\wei-yang\\workspace\\JavaWeb\\mycounter.txt");
+
+			br = new BufferedReader(f);
+
+			String numVal = br.readLine();
+
+			System.out.println("numVal=" + numVal);
+
+			this.getServletContext().setAttribute("times", numVal);
+
+			int times = 0;
+
+			System.out.println("init 被 呼叫");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	// 覆寫detroy函數
+	public void destroy() {
+		try {
+
+			// 將新的次數寫入
+
+			fw = new FileWriter("C:\\Users\\wei-yang\\workspace\\JavaWeb\\mycounter.txt");
+			bw = new BufferedWriter(fw);
+			bw.write(this.getServletContext().getAttribute("times").toString());
+
+			System.out.println("destroy被呼叫");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 
 	 */
@@ -49,6 +97,10 @@ public class LoginCl extends HttpServlet {
 				}
 				HttpSession hs = req.getSession(true);
 				hs.setAttribute("username", username);
+
+				String _times =this.getServletContext().getAttribute("times").toString() ;
+				int times_ = Integer.parseInt(_times)+1;
+				this.getServletContext().setAttribute("times", times_);
 
 				// 寫道你要到的Servlet的那個url
 				res.sendRedirect("WelcomeServlet");
