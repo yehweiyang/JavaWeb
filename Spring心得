@@ -1,0 +1,7 @@
+三個IOC執行的方式
+XML based configuration file.
+
+Annotation-based configuration
+
+Java-based configuration
+--------------------------------------------------------------
