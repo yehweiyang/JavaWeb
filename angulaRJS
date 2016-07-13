@@ -1,0 +1,1 @@
+  <select ng-options="zzz.name for zzz in sizes " ng-model="item" ng-change="update()"></select>
